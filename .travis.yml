@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t cinai/react-test -f ./client/dev.Dockerfile ./client
+
+script:
+  - docker run cinai/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t cinai/multi-client ./client
+  - docker build -t cinai/multi-nginx ./nginx
+  - docker build -t cinai/multi-server ./server
+  - docker build -t cinai/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them into Docker hub
+  - docker push cinai/multi-client
+  - docker push cinai/multi-nginx
+  - docker push cinai/multi-server
+  - docker push cinai/multi-worker
