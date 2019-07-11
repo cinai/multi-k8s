@@ -29,13 +29,12 @@
       "essential": true,
       "portMappings": [
         {
-          "host": 80,
+          "hostPort": 80,
           "containerPort": 80
         }
       ],
       "links": ["client", "server"],
       "memory": 128
     }
-
   ]
 }
